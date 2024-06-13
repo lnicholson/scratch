@@ -1,0 +1,23 @@
+interfaces:
+- name: bond0
+  type: bond
+  state: up
+  ipv4:
+    address:
+    - ip: [IP_ADDRESS_HERE]
+      prefix-length: 24
+    enabled: true
+  link-aggregation:
+    mode: active-backup
+    port:
+    - [MEMBER1_NIC]
+    - [MEMBER2_NIC]
+dns-resolver:
+  config:
+    server:
+    - [DNS_SERVER]
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: [DEFAULT_GATEWAY]
+    next-hop-interface: bond0

@@ -4,7 +4,7 @@ interfaces:
   state: up
   ipv4:
     address:
-    - ip: [IP_ADDRESS_HERE]
+    - ip: [NODE_IP_ADDRESS]
       prefix-length: 24
     enabled: true
   link-aggregation:
@@ -15,7 +15,8 @@ interfaces:
 dns-resolver:
   config:
     server:
-    - [DNS_SERVER]
+    - [DNS_SERVER_1]
+    - [DNS_SERVER_2]
 routes:
   config:
   - destination: 0.0.0.0/0

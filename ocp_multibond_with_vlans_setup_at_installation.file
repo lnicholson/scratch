@@ -1,0 +1,42 @@
+interfaces:
+- name: bond0
+  type: bond
+  state: up
+  ipv4:
+    enabled: false
+  link-aggregation:
+    mode: active-backup
+    port:
+    - eth0
+    - eth1
+- name: bond0.[VLAN_NUMBER]
+  type: vlan
+  state: up
+  vlan: [VLAN_NUMBER]
+    id: 
+    base-iface: bond0
+  ipv4:
+    address:
+    - ip: [IP_ADDRESS]
+      prefix-length: 24
+    enabled: true
+- name: bond1
+  type: bond
+  state: up
+  ipv4:
+    enabled: false
+  link-aggregation:
+    mode: balance-tlb
+    port:
+    - eth2
+    - eth3
+dns-resolver:
+  config:
+    server:
+    - [DNS_SERVER_1]
+    - [DNS_SERVER_2]
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: [DEFAULT_ROUTE]
+    next-hop-interface: bond0.[VLAN_NUMBER]

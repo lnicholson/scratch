@@ -1,0 +1,118 @@
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: [CLUSTER_NAME]
+rendezvousIP: [IP_OF_NODE_TO_BOOTSTRAP_AND_INSTALL_MONITOR]
+hosts:
+  - hostname: [HOSTNAME_OF_SERVER1]
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/sdb	
+    interfaces:
+     - name: [NAME_OF_NIC - ETH0]
+       macAddress:  [MACADDRESS_FIRST_NIC]
+     - name: [NAME_OF_NIC - ETH1]
+       macAddress: [MACADDRESS_SECOND_NIC]		
+    networkConfig:
+      interfaces:
+        - name: [BOND_NAME]
+          type: bond
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: [IPADDRESS_SERVER1]
+                prefix-length: [NETWORK_LENGTH - 24]
+            dhcp: false
+          link-aggregation:
+            mode: active-backup
+            port:
+             - [NAME_OF_NIC - ETH0]
+             - [NAME_OF_NIC - ETH1]			
+      dns-resolver:
+        config:
+          server:
+            - [DNS_SERVER]
+          search:
+            - [DNS_SEARCH_SUFFIX]
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: [DEFAULT_ROUTE_IP]
+            next-hop-interface: [DEFAULT_ROUTE_INTERFACE]
+            table-id: 254
+  - hostname: [HOSTNAME_OF_SERVER2]
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/sdb	
+    interfaces:
+     - name: [NAME_OF_NIC - ETH0]
+       macAddress:  [MACADDRESS_FIRST_NIC]
+     - name: [NAME_OF_NIC - ETH1]
+       macAddress: [MACADDRESS_SECOND_NIC]			
+    networkConfig:
+      interfaces:
+        - name: [BOND_NAME]  
+          type: bond
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: [IPADDRESS_SERVER2]
+                prefix-length: [NETWORK_LENGTH - IE 24]
+            dhcp: false
+          link-aggregation:
+            mode: active-backup 
+            port:
+             - [NAME_OF_NIC - ETH0]
+             - [NAME_OF_NIC - ETH1]			
+      dns-resolver:
+        config:
+          server:
+            - [DNS_SERVER]
+          search:
+            - [DNS_SEARCH_SUFFIX]
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: [DEFAULT_ROUTE_IP]
+            next-hop-interface: [DEFAULT_ROUTE_INTERFACE]
+            table-id: 254
+  - hostname: [HOSTNAME_OF_SERVER3]
+    role: master
+    rootDeviceHints:
+      deviceName: /dev/sdb	
+    interfaces:
+     - name: [NAME_OF_NIC - ETH0]
+       macAddress:  [MACADDRESS_FIRST_NIC]
+     - name: [NAME_OF_NIC - ETH1]
+       macAddress: [MACADDRESS_SECOND_NIC]			
+    networkConfig:
+      interfaces:
+        - name: [BOND_NAME]  
+          type: bond
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: [IPADDRESS_SERVER3]
+                prefix-length: [NETWORK_LENGTH - IE 24]
+            dhcp: false
+          link-aggregation:
+            mode: active-backup
+            port:
+             - [NAME_OF_NIC - ETH0]
+             - [NAME_OF_NIC - ETH1]			
+      dns-resolver:
+        config:
+          server:
+            - [DNS_SERVER]
+          search:
+            - [DNS_SEARCH_SUFFIX]
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: [DEFAULT_ROUTE_IP]
+            next-hop-interface: [DEFAULT_ROUTE_INTERFACE]
+            table-id: 254			
+  

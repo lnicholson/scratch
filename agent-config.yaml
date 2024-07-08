@@ -5,7 +5,6 @@ metadata:
 rendezvousIP: [IP_OF_NODE_TO_BOOTSTRAP_AND_INSTALL_MONITOR]
 hosts:
   - hostname: [HOSTNAME_OF_SERVER1]
-    role: master
     rootDeviceHints:
       deviceName: /dev/sdb	
     interfaces:
@@ -42,7 +41,6 @@ hosts:
             next-hop-interface: [DEFAULT_ROUTE_INTERFACE]
             table-id: 254
   - hostname: [HOSTNAME_OF_SERVER2]
-    role: master
     rootDeviceHints:
       deviceName: /dev/sdb	
     interfaces:
@@ -79,7 +77,6 @@ hosts:
             next-hop-interface: [DEFAULT_ROUTE_INTERFACE]
             table-id: 254
   - hostname: [HOSTNAME_OF_SERVER3]
-    role: master
     rootDeviceHints:
       deviceName: /dev/sdb	
     interfaces:

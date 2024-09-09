@@ -1,0 +1,61 @@
+oc -n openshift-monitoring patch configmap cluster-monitoring-config -p '{"data":{"config.yaml":"enableUserWorkload: true"}}'
+
+#If the above doesn't work for some reason, the UI can be used to add the values to the configmap
+
+The outcome will be the following:
+$ oc get pods -n openshift-user-workload-monitoring
+NAME                                   READY   STATUS    RESTARTS   AGE
+prometheus-operator-675f9d4b96-f9zxd   2/2     Running   0          8d
+prometheus-user-workload-0             6/6     Running   0          8d
+prometheus-user-workload-1             6/6     Running   0          8d
+thanos-ruler-user-workload-0           4/4     Running   0          8d
+thanos-ruler-user-workload-1           4/4     Running   0          8d
+
+#After verifying the above is functioning correctly, proceed with installing the Grafana Operator via the UI.
+
+#Once the operator is installed, perform the following via the OC CLI:
+
+oc project openshift-user-workload-monitoring
+oc create sa grafana-sa
+oc adm policy add-cluster-role-to-user cluster-monitoring-view -z grafana-sa
+
+#Due to the most recent versions of Kubernetes no longer generating secrets for Service Accounts on creation, a secret will have to be manually generated for the recently created grafana-sa service account:
+
+cat <<EOF | oc create -f -
+ apiVersion: v1
+ kind: Secret
+ metadata:
+   name: grafana-sa-token
+   annotations:
+     kubernetes.io/service-account.name: grafana-sa
+ type: kubernetes.io/service-account-token
+ EOF
+
+#On successful token creation, the result will output:
+
+secret/grafana-sa-token created
+
+#Next, for simplicity, we create environment variables...
+
+SECRET_NAME="grafana-sa-token" ; TOKEN=$(oc get secret ${SECRET_NAME} -o jsonpath='{$.data.token}' | base64 -d | sed $'s/$/\\\n/g')
+
+#Create a grafana-secret-creds.yaml file and populate it with the following content.  Values below in brackets need to be replaced with the desired credentials.
+cat <<EOF > grafana-secret-creds.yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: credentials
+  namespace: openshift-user-workload-monitoring
+stringData:
+  GF_SECURITY_ADMIN_PASSWORD: [ GRAFANA_PASSWORD ]
+  GF_SECURITY_ADMIN_USER: [ GRAFANA_LOGIN ]
+  PROMETHEUS_TOKEN: '${TOKEN}'          
+type: Opaque
+EOF
+
+#Add the secret to Openshift:
+oc create -f grafana-secret-creds.yaml
+
+#Once the secrets credentials have been added to Openshift, we can deploy Grafana.  The remainins steps to complete the setup are to be followed on the Developer Blog page here:
+
+Now let's create our Grafana instance and it will read the credentials defined in the previously created secret:  https://developers.redhat.com/articles/2024/08/19/monitor-openshift-virtualization-using-user-defined-projects-and-grafana#prerequisites

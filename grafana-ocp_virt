@@ -56,6 +56,6 @@ EOF
 #Add the secret to Openshift:
 oc create -f grafana-secret-creds.yaml
 
-#Once the secrets credentials have been added to Openshift, we can deploy Grafana.  The remainins steps to complete the setup are to be followed on the Developer Blog page here:
+#Once the secrets credentials have been added to Openshift, we can deploy Grafana.  The remaining steps to complete the setup are to be followed on the Developer Blog page here:
 
 Now let's create our Grafana instance and it will read the credentials defined in the previously created secret:  https://developers.redhat.com/articles/2024/08/19/monitor-openshift-virtualization-using-user-defined-projects-and-grafana#prerequisites

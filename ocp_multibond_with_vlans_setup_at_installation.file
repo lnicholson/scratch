@@ -12,8 +12,8 @@ interfaces:
 - name: bond0.[VLAN_NUMBER]
   type: vlan
   state: up
-  vlan: [VLAN_NUMBER]
-    id: 
+  vlan:
+    id: [VLAN_NUMBER]
     base-iface: bond0
   ipv4:
     address:
